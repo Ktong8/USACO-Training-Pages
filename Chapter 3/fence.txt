@@ -1,0 +1,73 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: fence
+*/
+import java.io.*;
+import java.util.*;
+
+class fence {
+	
+	public static int n, circuitpos;
+	public static ArrayList<Integer>[] edges;
+	public static int[] circuit;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("fence.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("fence.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		edges = new ArrayList[501];
+		circuit = new int[1500];
+		for(int i = 0; i<500; i++){
+			edges[i] = new ArrayList<Integer>();
+		}
+		for(int i =0 ; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			int a = Integer.parseInt(st.nextToken())-1;
+			int b = Integer.parseInt(st.nextToken())-1;
+			edges[a].add(b);
+			edges[b].add(a);
+		}
+		for(int i = 0; i<500; i++){
+			Collections.sort(edges[i]);
+		}
+		int start = 0;
+		boolean circuitcheck = true;
+		for(int i = 0; i<500; i++){
+			if(edges[i].size()%2 != 0 && circuitcheck){
+				circuitcheck = false;
+				start = i;
+			}
+		}
+		if(circuitcheck){
+			while(edges[start].size() == 0){
+				start++;
+			}
+		}
+		circuitpos = 0;
+		findCircuit(start);
+		int index = 0;
+		for(index = circuitpos-1; index>=0; index--){
+			out.println(circuit[index]);
+		}
+		out.close();
+	}
+	
+	public static void findCircuit(int i){
+		if(edges[i].size() == 0){
+			circuit[circuitpos] = i+1;
+			circuitpos++;
+		}
+		else{
+			while(edges[i].size()>0){
+				int j = edges[i].get(0);
+				edges[i].remove(0);
+				edges[j].remove(edges[j].indexOf(i));
+				findCircuit(j);
+			}
+			circuit[circuitpos] = i+1;
+			circuitpos++;
+		}
+	}
+}

@@ -1,0 +1,69 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: stamps
+*/
+import java.io.*;
+import java.util.*;
+
+class stamps {
+	
+	public static int k,n;
+	public static int[] vals;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("stamps.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("stamps.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		k = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		vals = new int[n];
+		int index = 0;
+		while(f.ready()){
+			st = new StringTokenizer(f.readLine());
+			while(st.hasMoreTokens()){
+				vals[index] = Integer.parseInt(st.nextToken());
+				index++;
+			}
+		}
+		Arrays.sort(vals);
+		int[] reaches = new int[vals[n-1]*k+1];
+		for(int i:vals){
+			reaches[i] = 1;
+		}
+		for(int i = 0 ;i<reaches.length; i++){
+			if(reaches[i]>0 && reaches[i]<k){
+				for(int j:vals){
+					if(reaches[i+j]>0){
+						reaches[i+j] = Math.min(reaches[i+j], reaches[i]+1);
+					}
+					else{
+						reaches[i+j] = reaches[i]+1;
+					}
+				}
+			}
+		}
+		System.out.println("sadfds");
+		index = 1;
+		while(index<reaches.length && reaches[index]>0){
+			index++;
+		}
+		out.println(index-1);
+		out.close();
+	}
+	
+	public static class Possibles implements Comparable<Possibles>{
+		public int size, bin;
+		public Possibles(int size, int bin){
+			this.size = size;
+			this.bin = bin;
+		}
+		
+		public int compareTo(Possibles other){
+			if(this.size == other.size){
+				return this.bin-other.bin;
+			}
+			return this.size-other.size;
+		}
+	}
+}

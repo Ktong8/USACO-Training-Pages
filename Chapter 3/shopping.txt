@@ -1,0 +1,104 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: shopping
+*/
+import java.io.*;
+import java.util.*;
+
+class shopping {
+	
+	public static int s,b;
+	public static int[][] prices, offers;
+	public static int[] target;
+	public static int[][][][][] dp;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("shopping.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("shopping.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		s = Integer.parseInt(st.nextToken());
+		offers = new int[99][12];
+		for(int i = 0; i<s; i++){
+			st = new StringTokenizer(f.readLine());
+			int counter = 0;
+			while(st.hasMoreTokens()){
+				offers[i][counter] = Integer.parseInt(st.nextToken());
+				counter++;
+			}
+		}
+		st = new StringTokenizer(f.readLine());
+		b = Integer.parseInt(st.nextToken());
+		prices = new int[5][3];
+		target = new int[5];
+		for(int i = 0; i < b; i++){
+			st = new StringTokenizer(f.readLine());
+			prices[i][0] = Integer.parseInt(st.nextToken());
+			prices[i][1] = Integer.parseInt(st.nextToken());
+			prices[i][2] = Integer.parseInt(st.nextToken());
+			target[i] = prices[i][1];
+		}
+		dp = new int[6][6][6][6][6];
+		for(int a = 0;a<6; a++){
+			for(int b = 0; b<6; b++){
+				for(int c = 0; c<6; c++){
+					for(int d = 0; d<6; d++){
+						Arrays.fill(dp[a][b][c][d], -1);
+					}
+				}
+			}
+		}
+		out.println(dynamicProgram(target));
+		out.close();
+	}
+	
+	public static int dynamicProgram(int[] t){
+		if(t[0] == 0 && t[1] == 0 && t[2] == 0 && t[3] == 0 && t[4]==0){
+			return 0;
+		}
+		if(dp[t[0]][t[1]][t[2]][t[3]][t[4]] != -1){
+			return dp[t[0]][t[1]][t[2]][t[3]][t[4]];
+		}
+		int min = Integer.MAX_VALUE;
+		for(int i = 0; i<s; i++){ //Update minimum with possible values from offers
+			int[] c = new int[5];
+			for(int j = 0; j<5; j++){
+				c[j] = t[j];
+			}
+			boolean check = true;
+			for(int j = 1; j<offers[i][0]*2; j+=2){
+				boolean check2 = false;
+				for(int k = 0; k<b; k++){
+					if(prices[k][0] == offers[i][j]){
+						if(c[k] >= offers[i][j+1]){
+							check2 = true;
+							c[k] -= offers[i][j+1];
+						}
+						else{
+							break;
+						}
+					}
+				}
+				if(!check2){
+					check = false;
+					break;
+				}
+			}
+			if(check){
+				min = Math.min(min, dynamicProgram(c)+offers[i][offers[i][0]*2+1]);
+			}
+		}
+		for(int i = 0; i<b;i++){ //Update minimum with possibles values from regular prices
+			int[] c = new int[5];
+			for(int j = 0; j<5; j++){
+				c[j] = t[j];
+			}
+			if(c[i] > 0){
+				c[i]--;
+				min = Math.min(min, dynamicProgram(c) + prices[i][2]);
+			}
+		}
+		dp[t[0]][t[1]][t[2]][t[3]][t[4]] = min;
+		return min;
+	}
+}

@@ -1,0 +1,53 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: sprime
+*/
+import java.io.*;
+import java.util.*;
+
+class sprime {
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("sprime.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("sprime.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		ArrayList<Integer> result = sprimes(n);
+		for(int i:result){
+			out.println(i);
+		}
+		out.close();
+	}
+	
+	public static boolean checkPrime(int n){
+		for(int i = 3; i<= Math.sqrt(n); i+=2){
+			if(n%i==0){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static ArrayList<Integer> sprimes(int n){
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		if(n == 1){
+			ret.add(2);ret.add(3);ret.add(5);ret.add(7);
+			return ret;
+		}
+		if(n==2){
+			ret.add(23);ret.add(29);ret.add(31);ret.add(37);ret.add(53);ret.add(59);ret.add(71);ret.add(73);ret.add(79);
+			return ret;
+		}
+		ArrayList<Integer> previous = sprimes(n-1);
+		for(int i:previous){
+			for(int j = 1; j<=9; j+=2){
+				int num = 10*i+j;
+				if(checkPrime(num)){
+					ret.add(num);
+				}
+			}
+		}
+		return ret;
+	}
+}

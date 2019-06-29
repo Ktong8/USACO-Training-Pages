@@ -1,0 +1,119 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: msquare
+*/
+import java.io.*;
+import java.util.*;
+
+class msquare {
+	
+	public static int target;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("msquare.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("msquare.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		StringBuilder sb = new StringBuilder(8);
+		for(int i = 0; i<8; i++){
+			sb.append(st.nextToken());
+		}
+		target = Integer.parseInt(sb.toString());
+		int[] start = {1,2,3,4,5,6,7,8};
+		State begin = new State(start, 0, "");
+		String moveSeq = "";
+		int length = 0;
+		PriorityQueue<State> queue = new PriorityQueue<State>();
+		HashMap<Integer, Boolean> visited = new HashMap<Integer, Boolean>();
+		queue.add(begin);
+		int counter = 0;
+		while(!queue.isEmpty()){
+			State current = queue.poll();
+			if(current.val() == target){
+				length = current.steps;
+				moveSeq = current.moves;
+				break;
+			}
+			State temp = current.moveA();
+			if(visited.get(temp.val()) == null){
+				queue.add(temp);
+				visited.put(temp.val(),true);
+			}
+			temp = current.moveB();
+			if(visited.get(temp.val()) == null){
+				queue.add(temp);
+				visited.put(temp.val(),true);
+			}
+			temp = current.moveC();
+			if(visited.get(temp.val()) == null){
+				queue.add(temp);
+				visited.put(temp.val(),true);
+			}
+		}
+		out.println(length);
+		out.println(moveSeq);
+		out.close();
+	}
+	
+	public static class State implements Comparable<State>{
+		public int[] board;
+		public String moves;
+		public int steps;
+		public State(int[] board, int steps, String moves){
+			this.board = board;
+			this.steps = steps;
+			this.moves = moves;
+		}
+		
+		public int val(){
+			int ret = 10000000*board[0]+1000000*board[1]+100000*board[2]+10000*board[3]+1000*board[4]+100*board[5]+10*board[6]+board[7];
+			return ret;
+		}
+		
+		public State moveA(){
+			int[] newBoard = new int[8];
+			newBoard[0] = board[7];
+			newBoard[1] = board[6];
+			newBoard[2] = board[5];
+			newBoard[3] = board[4];
+			newBoard[4] = board[3];
+			newBoard[5] = board[2];
+			newBoard[6] = board[1];
+			newBoard[7] = board[0];
+			return new State(newBoard, steps+1, moves + "A");
+		}
+		
+		public State moveB(){
+			int[] newBoard = new int[8];
+			newBoard[0] = board[3];
+			newBoard[1] = board[0];
+			newBoard[2] = board[1];
+			newBoard[3] = board[2];
+			newBoard[4] = board[5];
+			newBoard[5] = board[6];
+			newBoard[6] = board[7];
+			newBoard[7] = board[4];
+			return new State(newBoard, steps+1, moves + "B");
+		}
+		
+		public State moveC(){
+			int[] newBoard = new int[8];
+			newBoard[0] = board[0];
+			newBoard[1] = board[6];
+			newBoard[2] = board[1];
+			newBoard[3] = board[3];
+			newBoard[4] = board[4];
+			newBoard[5] = board[2];
+			newBoard[6] = board[5];
+			newBoard[7] = board[7];
+			return new State(newBoard, steps+1, moves + "C");
+		}
+		
+		public int compareTo(State other){
+			if(this.steps != other.steps){
+				return this.steps-other.steps;
+			}
+			return this.moves.compareTo(other.moves);
+		}
+	}
+}

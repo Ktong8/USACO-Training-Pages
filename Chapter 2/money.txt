@@ -1,0 +1,47 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: money
+*/
+import java.io.*;
+import java.util.*;
+
+class money {
+	
+	public static int v,n;
+	public static int[] coinVals;
+	public static long[] ways;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("money.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("money.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		v = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		ways = new long[n+1];
+		ways[0] = 1;
+		coinVals = new int[v];
+		int counter = 0;
+		while(f.ready()){
+			st = new StringTokenizer(f.readLine());
+			while(st.hasMoreTokens()){
+				coinVals[counter] = Integer.parseInt(st.nextToken());
+				counter++;
+			}
+		}
+		Arrays.sort(coinVals);
+		counter = 0;
+		while(counter<v && coinVals[counter]<=n){
+			for(int i = n; i >0; i--){
+				int j = i-coinVals[counter];
+				while(j>=0){
+					ways[i] += ways[j];
+					j -= coinVals[counter];
+				}
+			}
+			counter++;
+		}
+		out.println(ways[n]);
+		out.close();
+	}
+}

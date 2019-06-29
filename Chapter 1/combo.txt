@@ -1,0 +1,71 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: combo
+*/
+import java.io.*;
+import java.util.*;
+
+class combo {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("combo.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("combo.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int num = Integer.parseInt(st.nextToken());
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		st = new StringTokenizer(f.readLine());
+		int[] combo1 = new int[3];
+		int[] combo2 = new int[3];
+		for(int i = 0; i<3; i++){
+			combo1[i] = Integer.parseInt(st.nextToken());
+		}
+		st = new StringTokenizer(f.readLine());
+		for(int i = 0; i<3; i++){
+			combo2[i] = Integer.parseInt(st.nextToken());
+		}
+		ArrayList<Combo> possible = new ArrayList<Combo>();
+		for(int i = num-2; i<num+3; i++){
+			for(int j = num-2; j<num+3; j++){
+				for(int k = num-2; k<num+3; k++){
+					Combo checking = new Combo((i+combo1[0])%num, (j+combo1[1])%num, (k+combo1[2])%num);
+					boolean check = true;
+					for(Combo c: possible){
+						if(c.a == checking.a && c.b == checking.b && c.c == checking.c){
+							check = false;
+						}
+					}
+					if(check){
+						possible.add(checking);
+					}
+				}
+			}
+		}
+		for(int i = num-2; i<num+3; i++){
+			for(int j = num-2; j<num+3; j++){
+				for(int k = num-2; k<num+3; k++){
+					Combo checking = new Combo((i+combo2[0])%num, (j+combo2[1])%num, (k+combo2[2])%num);
+					boolean check = true;
+					for(Combo c: possible){
+						if(c.a == checking.a && c.b == checking.b && c.c == checking.c){
+							check = false;
+						}
+					}
+					if(check){
+						possible.add(checking);
+					}
+				}
+			}
+		}
+		out.println(possible.size());
+		out.close();
+	}
+	
+	static class Combo{
+		int a, b, c;
+		Combo(int a, int b, int c){
+			this.a = a;
+			this.b = b;
+			this.c = c;
+		}
+	}
+}

@@ -1,0 +1,39 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: runround
+*/
+import java.io.*;
+import java.util.*;
+
+class runround {
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("runround.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("runround.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int n = Integer.parseInt(st.nextToken())+1;
+		while(!isRun(Integer.toString(n))){
+			n++;
+		}
+		out.println(n);
+		out.close();
+	}
+	
+	public static boolean isRun(String n){
+		ArrayList<Integer> covered = new ArrayList<Integer>();
+		int counter = 0;
+		int position = 0;
+		while(counter<n.length()){
+			int digit = Character.getNumericValue(n.charAt(position));
+			int newPosition = (position+digit)%n.length();
+			if(covered.contains(Character.getNumericValue(n.charAt(newPosition)))){
+				return false;
+			}
+			position = newPosition;
+			counter++;
+			covered.add(Character.getNumericValue(n.charAt(position)));
+		}
+		return true;
+	}
+}

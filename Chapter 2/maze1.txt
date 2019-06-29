@@ -1,0 +1,134 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: maze1
+*/
+import java.io.*;
+import java.util.*;
+
+class maze1 {
+	
+	public static int height, width, max;
+	public static int[][] mazeLayout, mazeSteps;
+	public static boolean[][] mazeVisited;
+	public static int[][] exits; // exits[0][x], [y] -> first exit, etc
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("maze1.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("maze1.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		width = Integer.parseInt(st.nextToken());
+		int index = 0;
+		exits = new int[2][2];
+		height = Integer.parseInt(st.nextToken());
+		mazeLayout = new int[width][height];
+		mazeSteps = new int[width][height];
+		for(int i = 0 ;i<2*height+1; i++){
+			String temp = f.readLine();
+			if(i%2 == 0){
+				for(int j = 1; j<2*width+1; j+=2){
+					if(temp.charAt(j) == '-'){
+						if(i/2 < height){
+							mazeLayout[j/2][(i/2)] += 1;
+						}
+						if(i/2-1>=0){
+							mazeLayout[j/2][(i/2)-1] += 4;
+						}
+					}
+					else{
+						if(i==0){
+							exits[index][0] = j/2;
+							exits[index][1] = i/2;
+							index++;
+						}
+						else if(i==2*height){
+							exits[index][0] = j/2;
+							exits[index][1] = (i/2)-1;
+							index++;
+						}
+					}
+				}
+			}
+			else{
+				for(int j = 0; j<2*width+1; j+=2){
+					if(temp.charAt(j) == '|'){
+						if((j/2)-1>=0){
+							mazeLayout[(j/2)-1][i/2] += 2;
+						}
+						if(j/2 < width){
+							mazeLayout[j/2][i/2] += 8;
+						}
+					}
+					else{
+						if(j==0){
+							exits[index][0] = j/2;
+							exits[index][1] = i/2;
+							index++;
+						}
+						else if(j==2*width){
+							exits[index][0] = (j/2)-1;
+							exits[index][1] = i/2;
+							index++;
+						}
+					}
+				}
+			}
+		}
+		for(int i = 0 ; i < width; i++){
+			Arrays.fill(mazeSteps[i], Integer.MAX_VALUE);
+		}
+		System.out.println(exits[0][0] + ", " + exits[0][1]);
+		System.out.println(exits[1][0] + ", " + exits[1][1]);
+		
+		mazeVisited = new boolean[width][height];
+		floodFill(exits[0][0], exits[0][1],1);
+		mazeVisited = new boolean[width][height];
+		floodFill(exits[1][0], exits[1][1],1);
+		mazeVisited = new boolean[width][height];
+		for(int i = 0; i<height; i++){
+			for(int j = 0; j<width; j++){
+				System.out.print(mazeLayout[j][i] + ", ");
+			}
+			System.out.println();
+		}
+		maxSearch(0,0);
+		out.println(max);
+		out.close();
+	}
+	
+	public static void floodFill(int x, int y, int depth){
+		if(depth<mazeSteps[x][y]){
+			mazeSteps[x][y] = depth;
+			mazeVisited[x][y] = true;
+			if(mazeLayout[x][y]%2 == 0 && y-1>=0){ // north
+				floodFill(x,y-1, depth+1);
+			}
+			if((mazeLayout[x][y]/2)%2 == 0 && x+1<width){ // east
+				floodFill(x+1,y,depth+1);
+			}
+			if((mazeLayout[x][y]/4)%2 == 0 && y+1<height){ // south
+				floodFill(x,y+1, depth+1);
+			}
+			if((mazeLayout[x][y]/8)%2 == 0 && x-1>=0){ // west
+				floodFill(x-1, y, depth+1);
+			}
+		}
+	}
+	
+	public static void maxSearch(int x, int y){
+		mazeVisited[x][y] = true;
+		max = Math.max(max, mazeSteps[x][y]);
+		if(mazeLayout[x][y]%2 == 0 && y-1>=0 && (mazeVisited[x][y-1]!=true)){ // north
+			maxSearch(x,y-1);
+		}
+		if((mazeLayout[x][y]/2)%2 == 0 && x+1<width && (mazeVisited[x+1][y]!=true)){ // east
+			maxSearch(x+1,y);
+		}
+		if((mazeLayout[x][y]/4)%2 == 0 && y+1<height && (mazeVisited[x][y+1]!= true)){ // south
+			maxSearch(x,y+1);
+		}
+		if((mazeLayout[x][y]/8)%2 == 0 && x-1>=0 && (mazeVisited[x-1][y]!=true)){ // west
+			maxSearch(x-1, y);
+		}
+	}
+}

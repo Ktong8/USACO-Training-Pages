@@ -1,0 +1,109 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: cowtour
+*/
+import java.io.*;
+import java.util.*;
+
+class cowtour {
+	
+	public static int n;
+	public static int[][] coordinates;
+	public static boolean[][] adjacencymatrix;
+	public static double[][] distance;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("cowtour.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("cowtour.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		coordinates = new int[n][2];
+		adjacencymatrix = new boolean[n][n];
+		for(int i = 0 ;i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			coordinates[i][0] = Integer.parseInt(st.nextToken());
+			coordinates[i][1] = Integer.parseInt(st.nextToken());
+		}
+		for(int i = 0 ; i < n; i++){
+			String temp = f.readLine();
+			for(int j = 0; j<n; j++){
+				if(temp.charAt(j) == '0'){
+					adjacencymatrix[i][j] = false;
+				}
+				else{
+					adjacencymatrix[i][j] = true;
+				}
+			}
+		}
+		distance = new double[n][n];
+		for(int i = 0; i<n; i++){
+			for(int j = 0; j<n; j++){
+				if(adjacencymatrix[i][j]){
+					distance[i][j] = calcDist(coordinates[i][0], coordinates[i][1], coordinates[j][0], coordinates[j][1]);
+				}
+				else if(i == j){
+					distance[i][j] = 0;
+				}
+				else{
+					distance[i][j] = 20000000000.0;
+				}
+			}
+		}
+		for(int k = 0; k<n; k++){
+			for(int i = 0; i<n; i++){
+				for(int j = 0; j<n; j++){
+					distance[i][j] = Math.min(distance[i][j], distance[i][k] + distance[k][j]);
+				}
+			}
+		}
+		double origMax = 0;
+		for(int a = 0; a<n;a++){
+			for(int b = 0; b<a; b++){
+				if(distance[a][b] <20000000000.0){
+					origMax = Math.max(origMax, distance[a][b]);
+				}
+			}
+		}
+		System.out.println(origMax);
+		double abMax = 20000000000.0;
+		for(int i = 0 ; i<n;i++){
+			for(int j = 0 ; j<i; j++){
+				if(distance[i][j]>=20000000000.0){
+					double dist1 = 0;
+					double dist2 = 0;
+					for(int k = 0; k<n; k++){
+						if(distance[i][k] < 20000000000.0){
+							dist1 = Math.max(distance[i][k],dist1);
+						}
+						if(distance[j][k] < 20000000000.0){
+							dist2 = Math.max(distance[j][k],dist2);
+						}
+					}
+					double newDist = dist1+dist2+calcDist(coordinates[i][0], coordinates[i][1], coordinates[j][0], coordinates[j][1]);
+					double maxDist = Math.max(newDist, origMax);
+					abMax = Math.min(maxDist,abMax);
+				}
+			}
+		}
+		
+		out.printf("%.6f",abMax);out.println();
+		out.close();
+	}
+	
+	public static double calcDist(int x1, int y1, int x2, int y2){
+		if(x1==x2){
+			if(y1>y2){
+				return y1-y2;
+			}
+			return y2-y1;
+		}
+		if(y1==y2){
+			if(x2>x1){
+				return x2-x1;
+			}
+			return x1-x2;
+		}
+		return (Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2)));
+	}
+}

@@ -1,0 +1,33 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: subset
+*/
+import java.io.*;
+import java.util.*;
+
+class subset {
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("subset.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("subset.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		if(n%4 == 0 || n%4 == 3){
+			int[] nums = new int[(n*(n+1)/4)+1];
+			nums[0] = 1;
+			for(int i = 1; i< n; i++){
+				for(int j = n*(n+1)/4; j>=0; j--){
+					if(nums[j]>0 && j+i<= n*(n+1)/4){
+						nums[j+i]+=nums[j];
+					}
+				}
+			}
+			out.println(nums[n*(n+1)/4 - n]);
+		}
+		else{
+			out.println(0);
+		}
+		out.close();
+	}
+}

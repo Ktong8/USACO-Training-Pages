@@ -1,0 +1,49 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: camelot
+*/
+import java.io.*;
+import java.util.*;
+
+class camelot {
+	
+	public static int r,c;
+	public static ArrayList<Integer> positions; //index 0 is king
+	/*
+		Format:
+		0 1 2 3 4 ... c-1
+		c c+1 c+2 ... 2c-1
+		2c 2c+1   ... 3c-1
+		..................
+		(r-1)c    ... rc-1
+	*/
+	public static LinkedList<Integer>[] graph;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("camelot.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("camelot.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		r = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		positions = new ArrayList<Integer>(); // i,j => r*i + j
+		st = new StringTokenizer(f.readLine());
+		positions.add(((int)st.nextToken().charAt(0))-((int)'A')+c*(Integer.parseInt(st.nextToken())-1));
+		while(f.ready()){
+			st = new StringTokenizer(f.readLine());
+			while(st.hasMoreTokens()){
+				positions.add(((int)st.nextToken().charAt(0))-((int)'A')+c*(Integer.parseInt(st.nextToken())-1));
+			}
+		}
+		graph = new LinkedList<Integer>[r*c]; //Graph of possible squares for the knights
+		PriorityQueue<Integer> queue = new PriorityQueue<Integer>();
+		queue.add(positions.get(1));
+		boolean[] visited = new boolean[r*c];
+		while(!queue.isEmpty()){
+			current = queue.poll();
+			visited[current] = true;
+			
+		}
+		out.close();
+	}
+}

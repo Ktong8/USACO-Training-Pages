@@ -1,0 +1,71 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: inflate
+*/
+import java.io.*;
+import java.util.*;
+
+class inflate {
+	
+	public static int lim,n;
+	public static int[][] problems;
+	public static int max;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("inflate.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("inflate.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		lim = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		problems = new int[n][2];//points, minutes
+		for(int i = 0; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			problems[i][0] = Integer.parseInt(st.nextToken());
+			problems[i][1] = Integer.parseInt(st.nextToken());
+		}
+		boolean[] check = new boolean[n];
+		int removed = 0;
+		for(int i = 0; i<n; i++){
+			if(check[i]){
+				continue;
+			}
+			for(int j = 0;j<n;j++){
+				if(problems[j][1]>problems[i][1] && problems[j][0]<problems[i][0]){
+					if(check[j] == false){
+						check[j] = true;
+						removed++;
+					}
+				}
+			}
+		}
+		for(int i = 0 ; i< n; i++){
+			System.out.println(problems[i][0] + ", " + problems[i][1] + ": " + check[i]);
+		}
+		int[][] newproblems = new int[n-removed][2];
+		int counter = 0;
+		for(int i = 0; i<n; i++){
+			if(!check[i]){
+				newproblems[counter][0] = problems[i][0];
+				newproblems[counter][1] = problems[i][1];
+				counter++;
+			}
+		}
+		System.out.println();
+		for(int i = 0 ; i< newproblems.length; i++){
+			System.out.println(newproblems[i][0] + ", " + newproblems[i][1]);
+		}
+		int[] best = new int[lim+1];
+		int score = 0;
+		for(int i = 0 ; i<= lim; i++){
+			for(int j = 0; j<newproblems.length; j++){
+				if(i-newproblems[j][1] >= 0){
+					best[i] = Math.max(best[i], best[i-newproblems[j][1]]+newproblems[j][0]);
+				}
+			}
+			score = Math.max(score, best[i]);
+		}
+		out.println(score);
+		out.close();
+	}
+}

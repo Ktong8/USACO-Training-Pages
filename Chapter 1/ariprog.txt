@@ -1,0 +1,71 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: ariprog
+*/
+import java.io.*;
+import java.util.*;
+
+class ariprog {
+	
+	public static int n,m;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("ariprog.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ariprog.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(f.readLine());
+		m = Integer.parseInt(st.nextToken());
+		boolean[] bisquares = new boolean[2*m*m+1];
+		Arrays.fill(bisquares, false);
+		for(int p = 0; p<m+1; p++){
+			for(int q = 0; q<m+1; q++){
+				bisquares[p*p+q*q] = true;
+			}
+		}
+		ArrayList<Coordinate> work = new ArrayList<Coordinate>();
+		for(int i = 0; i<m*m*2; i++){
+			if(bisquares[i]){
+				for(int j = 1; j<=(m*m*2-i)/(n-1); j++){
+					if(bisquares[i+j]){
+						boolean check = true;
+						for(int k = 1; k<=n-1; k++){
+							if(!bisquares[i+j*k]){
+								check = false;
+							}
+						}
+						if(check){
+							work.add(new Coordinate(i, j));
+						}
+					}
+				}
+			}
+		}
+		Collections.sort(work);
+		if(work.size() == 0){
+			out.println("NONE");
+		}
+		else{
+			for(Coordinate c: work){
+				out.println(c.x + " " + c.y);
+			}
+		}
+		out.close();
+	}
+	
+	static class Coordinate implements Comparable<Coordinate>{
+		int x,y;
+		public Coordinate(int x, int y){
+			this.x = x;
+			this.y = y;
+		}
+		
+		public int compareTo(Coordinate other){
+			if(this.y != other.y){
+				return this.y-other.y;
+			}
+			return this.x-other.x;
+		}
+	}
+}

@@ -1,0 +1,70 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: dualpal
+*/
+import java.io.*;
+import java.util.*;
+
+class dualpal {
+	
+	public static String convToB(int n, int base){
+		String thing = "";
+		while(n!=0){
+			String b = "" + (n%base);
+			if(n%base>9){
+				switch(n%base){
+					case 10: b = "A"; break;
+					case 11: b = "B"; break;
+					case 12: b = "C"; break;
+					case 13: b = "D"; break;
+					case 14: b = "E"; break;
+					case 15: b = "F"; break;
+					case 16: b = "G"; break;
+					case 17: b = "H"; break;
+					case 18: b = "I"; break;
+					case 19: b = "J"; break;
+				}
+			}
+			thing += b;
+			n /= base;
+		}
+		return new StringBuilder(thing).reverse().toString();
+	}
+	
+	public static boolean checkPal(String x){
+		for(int j = 0; j<x.length(); j++){
+			if(x.charAt(j) != x.charAt(x.length()-j-1)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("dualpal.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("dualpal.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int s = Integer.parseInt(st.nextToken());
+		s++;
+		ArrayList<Integer> correct = new ArrayList<Integer>();
+		while(correct.size()<n){
+			int counter = 0;
+			for(int b = 2; b<11; b++){
+				if(checkPal(convToB(s,b))){
+					counter++;
+				}
+				
+			}
+			if(counter>=2){
+				correct.add(s);
+			}
+			s++;
+		}
+		for(int x: correct){
+			out.println(x);
+		}
+		out.close();
+	}
+}

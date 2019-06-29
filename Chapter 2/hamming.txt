@@ -1,0 +1,57 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: hamming
+*/
+import java.io.*;
+import java.util.*;
+
+class hamming {
+	
+	public static int n,b,d;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f=new BufferedReader(new FileReader("hamming.in"));
+		PrintWriter out=new PrintWriter(new BufferedWriter(new FileWriter("hamming.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		b = Integer.parseInt(st.nextToken());
+		d = Integer.parseInt(st.nextToken());
+		int[] nums = new int[n+2];
+		nums[0] = 0;
+		out.print("0 ");
+		int index = 1;
+		for(int i = 1; (i<(1<<b)); i++){
+			if(index<n){
+				boolean check = true;
+				for(int j = 0; j<index+1; j++){
+					if(getHammingDistance(i, nums[j]) < d){
+						check = false;
+					}
+				}
+				if(check){
+					if(index%10 == 9 || index==n-1){
+						out.println(i);
+					}
+					else{
+						out.print(i + " ");
+					}
+					index++;
+					nums[index] = i;
+				}
+			}
+		}
+		out.close();
+		f.close();
+	}
+	
+	public static int getHammingDistance(int a, int b){
+		int c = a^b;
+		int counter = 0;
+		while(c>0){
+			c -= c&(-c);
+			counter++;
+		}
+		return counter;
+	}
+}

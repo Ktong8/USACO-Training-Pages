@@ -1,0 +1,71 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: prefix
+*/
+import java.io.*;
+import java.util.*;
+
+class prefix {
+	
+	public static StringBuilder target;
+	public static ArrayList<String> primitives;
+	public static int length;
+	public static boolean[] checked;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("prefix.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("prefix.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		primitives = new ArrayList<String>();
+		String temp = st.nextToken();
+		while(!temp.equals(".")){
+			primitives.add(temp);
+			while(st.hasMoreTokens()){
+				primitives.add(st.nextToken());
+			}
+			st = new StringTokenizer(f.readLine());
+			temp = st.nextToken();
+		}
+		target = new StringBuilder(200010);
+		temp = f.readLine();
+		while(temp != null){
+			target.append(temp);
+			temp = f.readLine();
+		}
+		length = target.length();
+		checked = new boolean[length+1];
+		amount();
+		int max = 0;
+		for(int i = 0; i <= length; i++){
+			if(checked[i]){
+				max = i;
+			}
+		}
+		out.println(max);
+		out.close();
+	}
+	
+	public static void amount(){
+		checked[0] = true;
+		for(int i = 0; i<length;i++){
+			if(!checked[i]){
+				continue;
+			}
+			for(String p: primitives){
+				if(p.length() + i > length || checked[i+p.length()]){
+					continue;
+				}
+				boolean check=true;
+				for(int j = 0 ; j<p.length(); j++){
+					if(p.charAt(j) != target.charAt(j+i)){
+						check = false;break;
+					}
+				}
+				if(check){
+					checked[i+p.length()] = true;
+				}
+			}
+		}
+	}
+}

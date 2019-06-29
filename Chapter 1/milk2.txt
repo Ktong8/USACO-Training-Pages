@@ -1,0 +1,69 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: milk2
+*/
+import java.io.*;
+import java.util.*;
+
+class milk2 {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("milk2.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("milk2.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int num = Integer.parseInt(st.nextToken());
+		ArrayList<Integer> startT = new ArrayList<Integer>();
+		ArrayList<Integer> endT = new ArrayList<Integer>();
+		ArrayList<Integer> all = new ArrayList<Integer>();
+		for(int i = 0; i<num; i++){
+			st  = new StringTokenizer(f.readLine());
+			startT.add(Integer.parseInt(st.nextToken()));
+			endT.add(Integer.parseInt(st.nextToken()));
+			all.add(startT.get(i));
+			all.add(endT.get(i));
+		}
+		Collections.sort(all);
+		int atWork = 0;
+		boolean isWorking = false;
+		boolean done = false;
+		int maxOn = 0;
+		int maxOff = 0;
+		int startW = 0;
+		int startR = 0;
+		for(int t:all){
+			if((startT.indexOf(t) != -1) || (endT.indexOf(t) != -1)){
+				if(startT.indexOf(t)!=-1){
+					while(startT.indexOf(t) != -1){
+						atWork++;
+						startT.remove(startT.indexOf(t));
+					}
+					if(isWorking == false){
+						startW = t;
+						isWorking = true;
+						if(done && t-startR > maxOff){
+							maxOff = t-startR;
+						}
+					}
+				}
+				if(endT.indexOf(t) != -1){
+					while(endT.indexOf(t) != -1){
+						atWork--;
+						endT.remove(endT.indexOf(t));
+					}
+					if(atWork == 0){
+						isWorking = false;
+						startR = t;
+						if(t-startW>maxOn){
+							maxOn = t-startW;
+						}
+						if(done == false){
+							done = true;
+						}
+					}
+				}
+			}
+		}
+		out.println(maxOn + " " + maxOff);
+		out.close();
+	}
+}

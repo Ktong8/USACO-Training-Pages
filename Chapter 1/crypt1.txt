@@ -1,0 +1,63 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: crypt1
+*/
+import java.io.*;
+import java.util.*;
+
+class crypt1 {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("crypt1.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("crypt1.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int num = Integer.parseInt(st.nextToken());
+		ArrayList<Integer> digits = new ArrayList<Integer>();
+		st = new StringTokenizer(f.readLine());
+		for(int i = 0; i<num; i++){
+			digits.add(Integer.parseInt(st.nextToken()));
+		}
+		int counter = 0;
+		for(int a = 0; a<num; a++){
+			for(int b = 0; b< num ; b++){
+				for(int c = 0; c < num; c++){
+					for(int d = 0; d < num; d++){
+						for(int e = 0; e < num; e++){
+							int num1 = 100*digits.get(a) + 10*digits.get(b) + digits.get(c);
+							int num2 = 10*digits.get(d) + digits.get(e);
+							ArrayList<Integer> need = new ArrayList<Integer>();
+							int test1 = digits.get(d)*num1;
+							int test2 = digits.get(e)*num1;
+							int test3 = num1*num2;
+							if((test1/1000 == 0) && ((test1%1000-test1%100) != 0)&&(test2/1000 == 0) && ((test2%1000-test2%100) != 0)&&(test3/10000 == 0) && ((test3%10000-test3%1000) != 0)){ // check this before doing everything else
+								while(test1!= 0){
+									need.add(test1%10);
+									test1 /= 10;
+								}
+								while(test2!= 0){
+									need.add(test2%10);
+									test2 /= 10;
+								}
+								while(test3!= 0){
+									need.add(test3%10);
+									test3 /= 10;
+								}
+								boolean check = true;
+								for(int i: need){
+									if(!digits.contains(i)){
+										check = false;
+									}
+								}
+								if(check){
+									counter++;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		out.println(counter);
+		out.close();
+	}
+}

@@ -1,0 +1,42 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: humble
+*/
+import java.io.*;
+import java.util.*;
+
+class humble {
+	
+	public static int k,n;
+	public static int[] primes;
+	public static int[] humbles,next;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("humble.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("humble.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		k = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(f.readLine());
+		primes = new int[k];
+		humbles = new int[n+1];
+		for(int i = 0; i<k;i++){
+			primes[i] = Integer.parseInt(st.nextToken());
+		}
+		humbles[0] = 1;
+		next = new int[k];
+		for(int i = 1 ; i<=n; i++){
+			int nextnum = Integer.MAX_VALUE;
+			for(int j = 0; j<k; j++){
+				while(next[j] < i && humbles[next[j]]*primes[j]<=humbles[i-1]){
+					next[j]++;
+				}
+				nextnum = Math.min(nextnum, humbles[next[j]]*primes[j]);
+			}
+			humbles[i] = nextnum;
+		}
+		out.println(humbles[n]);
+		out.close();
+	}
+}

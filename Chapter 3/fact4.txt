@@ -1,0 +1,60 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: fact4
+*/
+import java.io.*;
+import java.util.*;
+
+class fact4 {
+	
+	public static int n,counter;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("fact4.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("fact4.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		if(n!=1){
+			int result = 1;
+			counter = 0;
+			for(int i = 1; i<=n; i++){
+				if(i%5 == 0){
+					int j = i;
+					while(j%5==0){
+						j/=5;
+						counter++;
+					}
+					result *= (j%5);
+					result %= 5;
+				}
+				else{
+					result *= (i%5);
+					result %= 5;
+				}
+			}
+			System.out.println(counter);
+			for(int i = 0;i<counter; i++){
+				switch(result){
+					case 1:result = 3;break;
+					case 2:result = 1;break;
+					case 3:result = 4;break;
+					case 4:result = 2;break;
+					default:System.out.println("error 1");break;
+				}
+			}
+			switch(result){
+				case 1:out.println("6");break;
+				case 2:out.println("2");break;
+				case 3:out.println("8");break;
+				case 4:out.println("4");break;
+				default: out.println("Weirdness");break;
+			}
+			out.close();
+		}
+		else{
+			out.println("1");
+			out.close();
+		}
+	}
+}

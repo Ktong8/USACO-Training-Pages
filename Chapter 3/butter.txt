@@ -1,0 +1,64 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: butter
+*/
+import java.io.*;
+import java.util.*;
+
+class butter {
+	
+	public static int n, p, m;
+	public static int[][] distances;
+	public static int[] cows;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("butter.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("butter.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		p = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
+		cows = new int[n];
+		distances = new int[p][p];
+		for(int i = 0; i<p; i++){
+			for(int j = 0; j<=i; j++){
+				if(i!= j){
+					distances[i][j] = 200000;
+					distances[j][i] = 200000;
+				}
+				else{
+					distances[i][j] = 0;
+				}
+			}
+		}
+		for(int i = 0; i < n; i++){
+			cows[i] = Integer.parseInt(f.readLine())-1;
+		}
+		for(int i = 0; i < m; i++){
+			st = new StringTokenizer(f.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			int d = Integer.parseInt(st.nextToken());
+			distances[a-1][b-1] = d;
+			distances[b-1][a-1] = d;
+		}
+		for(int k = 0; k<p; k++){
+			for(int i = 0; i<p; i++){
+				for(int j = 0; j<p; j++){
+					distances[i][j] = Math.min(distances[i][j], distances[i][k] + distances[k][j]);
+				}
+			}
+		}
+		int min = 20000000;
+		for(int i = 0; i<p; i++){
+			int temp = 0;
+			for(int c: cows){
+				temp += distances[i][c];
+			}
+			min = Math.min(min,temp);
+		}
+		out.println(min);
+		out.close();
+	}
+}

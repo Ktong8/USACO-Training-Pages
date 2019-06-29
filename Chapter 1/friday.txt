@@ -1,0 +1,41 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: friday
+*/
+import java.io.*;
+import java.util.*;
+
+class friday {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("friday.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("friday.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int time = Integer.parseInt(st.nextToken());
+		time *= 12;
+		int num = 4;
+		int[] frequency = new int[7];
+		for(int i = 0; i<time; i++){
+			int n = i%12;
+			if(n==4|| n==6 || n==9 || n==11){
+				frequency[(num+2)%7] += 1;
+				num = (num+2)%7;
+			}
+			else if(n==2){
+				if(((i/12)+300)%4 == 0 && ((((i/12)+300)%400 ==0) || (((i/12)+300)%100 != 0))){
+					frequency[(num+1)%7] +=1;
+					num = (num+1)%7;
+				}
+				else{
+					frequency[num] +=1;
+				}
+			}
+			else{
+				frequency[(num+3)%7] += 1;
+				num = (num+3)%7;
+			}
+		}
+		out.println(frequency[0] + " " + frequency[1] + " " + frequency[2] + " " + frequency[3] + " " + frequency[4] + " " + frequency[5] + " " + frequency[6]);
+		out.close();
+	}
+}

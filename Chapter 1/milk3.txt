@@ -1,0 +1,57 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: milk3
+*/
+import java.io.*;
+import java.util.*;
+
+class milk3 {
+	
+	public static boolean[][][] seen;
+	public static int a,b,c;
+	public static ArrayList<Integer> possible;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("milk3.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("milk3.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		a = Integer.parseInt(st.nextToken());
+		b = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		seen = new boolean[a+1][b+1][c+1];
+		possible = new ArrayList<Integer>();
+		solve(0,0,c);
+		Collections.sort(possible);
+		out.print(possible.get(0));
+		for(int i = 1; i<possible.size(); i++){
+			out.print(" " + possible.get(i));
+		}
+		out.println();
+		out.close();
+	}
+	
+	public static void solve(int x, int y, int z){
+		if(seen[x][y][z]){
+			return;
+		}
+		seen[x][y][z] = true;
+		
+		if(x == 0){
+			possible.add(z);
+		}
+		
+		//x to y
+		solve(x-Math.min(x,b-y), y+Math.min(x,b-y), z);
+		//x to z
+		solve(x-Math.min(x,c-z), y, z+Math.min(c-z, x));
+		//y to x
+		solve(x+Math.min(a-x, y), y-Math.min(a-x, y), z);
+		//y to z
+		solve(x, y-Math.min(c-z, y), z+Math.min(c-z,y));
+		//z to x
+		solve(x+Math.min(a-x, z), y, z-Math.min(z,a-x));
+		//z to y
+		solve(x,y+Math.min(b-y, z), z-Math.min(b-y, z));
+	}
+}

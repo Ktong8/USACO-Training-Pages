@@ -1,0 +1,49 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: gift1
+*/
+import java.io.*;
+import java.util.*;
+
+class gift1 {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("gift1.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("gift1.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		String[] names = new String[Integer.parseInt(st.nextToken())];
+		for(int i = 0; i<names.length; i++){
+			st = new StringTokenizer(f.readLine());
+			names[i] = st.nextToken();
+		}
+		int[] netChange = new int[names.length];
+		for(int i = 0; i<names.length; i++){
+			st = new StringTokenizer(f.readLine());
+			String name = st.nextToken();
+			int j = 0;
+			while(!names[j].equals(name)){
+				j++;
+			}
+			st = new StringTokenizer(f.readLine());
+			int amount = Integer.parseInt(st.nextToken());
+			int people = Integer.parseInt(st.nextToken());
+			netChange[j] -= amount;
+			if(people != 0){
+				for(int l = 0; l<people; l++){
+					st = new StringTokenizer(f.readLine());
+					int k = 0;
+					String recipient = st.nextToken();
+					while(!names[k].equals(recipient)){
+						k++;
+					}
+					netChange[k] += amount/people;
+				}
+				netChange[j] += amount%people;
+			}
+		}
+		for(int i = 0; i<names.length; i++){
+			out.println(names[i] + " " + netChange[i]);
+		}
+		out.close();
+	}
+}

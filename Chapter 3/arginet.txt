@@ -1,0 +1,89 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: agrinet
+*/
+import java.io.*;
+import java.util.*;
+
+class agrinet {
+	public static int n;
+	public static Edge[] edges;
+	public static int[] link, size;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("agrinet.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("agrinet.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		edges = new Edge[n*(n-1)/2];
+		int counter = 0;
+		for(int i = 0 ; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			for(int j = 0 ; j<n; j++){
+				if(!st.hasMoreTokens()){
+					st = new StringTokenizer(f.readLine());
+				}
+				int temp = Integer.parseInt(st.nextToken());
+				if(j<i){
+					edges[counter] = new Edge(i,j,temp);
+					counter++;
+				}
+			}
+		}
+		System.out.println("asdf asfd ");
+		Arrays.sort(edges);
+		link = new int[n];
+		size = new int[n];
+		for(int i = 0; i<n; i++){
+			link[i] = i;
+			size[i] = 1;
+		}
+		ArrayList<Integer> weights = new ArrayList<Integer>();
+		for(Edge e:edges){
+			if(!same(e.a,e.b)){
+				int a = find(e.a);
+				int b = find(e.b);
+				if(size[a]<size[b]){
+					int c = b;
+					b = a;
+					a = c;
+				}
+				size[a] += size[b];
+				link[b] = a;
+				weights.add(e.weight);
+			}
+		}
+		counter = 0;
+		for(int i:weights){
+			System.out.println(i);
+			counter += i;
+		}
+		out.println(counter);
+		out.close();
+	}
+	
+	public static int find(int x){
+		while(x!=link[x]){
+			x = link[x];
+		}
+		return x;
+	}
+	
+	public static boolean same(int a, int b){
+		return find(a)==find(b);
+	}
+	
+	public static class Edge implements Comparable<Edge>{
+		public int a,b,weight;
+		public Edge(int a, int b, int weight){
+			this.a = a;
+			this.b = b;
+			this.weight = weight;
+		}
+		
+		public int compareTo(Edge other){
+			return this.weight-other.weight;
+		}
+	}
+}

@@ -1,0 +1,111 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: contact
+*/
+import java.io.*;
+import java.util.*;
+
+class contact {
+	
+	public static int a,b,n;
+	public static ArrayList<Possibles> ret;
+	public static int[][] counters;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("contact.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("contact.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		a = Integer.parseInt(st.nextToken());
+		b = Integer.parseInt(st.nextToken());
+		n = Integer.parseInt(st.nextToken());
+		StringBuilder binstring = new StringBuilder(2000001);
+		ret = new ArrayList<Possibles>();
+		while(f.ready()){
+			binstring.append(f.readLine());
+		}
+		int current = 0;
+		counters = new int[13][1<<12];
+		for(int i = 0; i < binstring.length(); i++){
+			current = (current<<1)|Integer.parseInt(binstring.substring(i, i+1));
+			for(int j = a; j<= b; j++){
+				if(i+1<j) continue;
+				counters[j][current & ((1<<j)-1)]++;
+			}
+		}
+		for(int i = a; i<=b; i++){
+			System.out.println("Size: " + i);
+			for(int j = 0; j<1<<i; j++){
+				ret.add(new Possibles(counters[i][j], toBin(j,i)));
+			}
+		}
+		
+		
+		
+		Collections.sort(ret);
+		int counter = 0;
+		int index = 0;
+		while(index<ret.size() && counter<n){
+			if(ret.get(index).num >0){
+				int temp = ret.get(index).num;
+				out.println(temp);
+				counter++;
+				int modulo = 0;
+				while(index<ret.size() && ret.get(index).num == temp){
+					if(modulo%6 == 0){
+						out.print(ret.get(index).bin);
+					}
+					else if(modulo%6 == 5){
+						out.println(" " + ret.get(index).bin);
+					}
+					else{
+						out.print(" " + ret.get(index).bin);
+					}
+					modulo++;
+					index++;
+				}
+				if(modulo%6 != 0){
+					out.println();
+				}
+			}
+			else{
+				index++;
+			}
+		}
+		out.close();
+	}
+	
+	public static String toBin(int n, int length){
+		StringBuilder temp = new StringBuilder(12);
+		while(n>0){
+			temp.append(n%2);
+			n/=2;
+		}
+		while(temp.length()<length){
+			temp.append(0);
+		}
+		temp.reverse();
+		return temp.toString();
+	}
+	
+	public static class Possibles implements Comparable<Possibles>{
+		public int num;
+		public String bin;
+		public Possibles(int num, String bin){
+			this.num = num;
+			this.bin = bin;
+		}
+		
+		public int compareTo(Possibles other){
+			if(this.num == other.num){
+				if(this.bin.length() == other.bin.length()){
+					return this.bin.compareTo(other.bin);
+				}
+				else{
+					return this.bin.length()-other.bin.length();
+				}
+			}
+			return -(this.num-other.num);
+		}
+	}
+}

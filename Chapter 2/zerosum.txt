@@ -1,0 +1,79 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: zerosum
+*/
+import java.io.*;
+import java.util.*;
+
+class zerosum {
+	
+	public static int n;
+	public static int[] symbols;
+	public static ArrayList<String> possible;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("zerosum.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("zerosum.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		symbols = new int[n]; //-1 for subtract, 0 for append, 1 for add
+		possible = new ArrayList<String>();
+		check(1);
+		Collections.sort(possible);
+		for(String s:possible){
+			out.println(s);
+		}
+		out.close();
+	}
+	
+	public static void check(int index){
+		if(index == n){
+			if(calculate()){
+				StringBuilder sb = new StringBuilder(2*n-1);
+				for(int i = 1; i<n; i++){
+					sb.append(i);
+					switch(symbols[i]){
+						case -1: sb.append('-');break;
+						case 0: sb.append(' ');break;
+						case 1: sb.append('+');break;
+						default: break;
+					}
+				}
+				sb.append(n);
+				possible.add(sb.toString());
+			}
+		}
+		else{
+			symbols[index] = 0;
+			check(index+1);
+			symbols[index] = -1;
+			check(index+1);
+			symbols[index] = 1;
+			check(index+1);
+		}
+	}
+	
+	public static boolean calculate(){
+		int total = 0;
+		int add = 1;
+		StringBuilder current = new StringBuilder();
+		current.append('1');
+		for(int index = 1; index<n; index++){
+			if(symbols[index] == 0){
+				current.append(index+1);
+			}
+			else{
+				total += add*Integer.parseInt(current.toString());
+				current = new StringBuilder();
+				current.append(index+1);
+				add = symbols[index];
+			}
+		}
+		total += add*Integer.parseInt(current.toString());
+		if(total == 0){
+			return true;
+		}
+		return false;
+	}
+}

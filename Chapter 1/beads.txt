@@ -1,0 +1,56 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: beads
+*/
+import java.io.*;
+import java.util.*;
+
+class beads {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("beads.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("beads.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int num = Integer.parseInt(st.nextToken());
+		st  = new StringTokenizer(f.readLine());
+		String beads = st.nextToken();
+		int max = 0;
+                for(int i = 2*num-1; i<3*num-1; i++){ //Split between i and i+1
+                    int p1,p2;
+                    int j = i;
+                    //System.out.print(i%num + ", ");
+                    char a1, a2;
+                    while(j>=num && beads.charAt(j%num) == 'w'){
+                        j--;
+                    }
+                    a1 = beads.charAt(j%num);
+                    j = i;
+                    while(j>=num && (beads.charAt(j%num) == 'w' || beads.charAt(j%num) == a1)){
+                        j--;
+                    }
+                    p1 = i-j;
+                    //System.out.print(j%num + "; ");
+                    j = i+1;
+                    while(j<= 4*num-2 && beads.charAt(j%num) == 'w'){
+                        j++;
+                    }
+                    a2 = beads.charAt(j%num);
+                    j = i+1;
+                    while(j<= 4*num-2 && (beads.charAt(j%num) == 'w' || beads.charAt(j%num) == a2)){
+                        j++;
+                    }
+                    p2 = j-i-1;
+                    //System.out.print(j%num + ", ");
+                    //System.out.print(p1+p2 +": ");
+                    if(p1+p2>=max && !(p1+p2>num)){
+                        max = p1+p2;
+                    }
+                    if(p1+p2>num){
+                        max = num;
+                    }
+                    //System.out.println(max);
+                }
+		out.println(max);
+		out.close();
+	}
+}

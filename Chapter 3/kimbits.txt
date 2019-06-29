@@ -1,0 +1,79 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: kimbits
+*/
+import java.io.*;
+import java.util.*;
+
+class kimbits {
+	
+	public static long l, index;
+	public static int n;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("kimbits.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("kimbits.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		l = Long.parseLong(st.nextToken());
+		index = Long.parseLong(st.nextToken());
+		long count = 0;
+		for(long i = 0; i <= 1L<<n;i++)
+		{
+			if(Long.bitCount(i) > l) { //find next working bit if over
+				int counter = 0;
+				long temp = i;
+				while((temp&1) == 0 && temp != 0)
+				{
+					counter++;
+					temp /= 2;
+				}
+				i+= (1<<counter)-1;
+				continue;
+			}
+			count++;
+			if(count == index) // break if found
+			{
+				count = i;
+				break;
+			}
+			int counter = 0;
+			long temp = i;
+			while((temp&1) == 1)
+			{
+				counter++;
+				temp /= 2;
+			}
+			if(index-count > (1L<<counter)-1) //skip over unnecessary iterations
+			{
+				i+= (1L<<counter)-1;
+				count += (1L<<counter)-1;
+			}
+		}
+		out.println(toBin(count));
+		out.close();
+	}
+	
+	public static String toBin(long m){
+		StringBuilder temp = new StringBuilder(n);
+		temp.append(Long.toBinaryString(m));
+		temp.reverse();
+		while(temp.length()<n){
+			temp.append(0);
+		}
+		temp.reverse();
+		return temp.toString();
+	}
+	
+	public static class ObjectThing implements Comparable<ObjectThing>{
+		public int a, b; // value, ones
+		public ObjectThing(int a, int b){
+			this.a = a;
+			this.b = b;
+		}
+		public int compareTo(ObjectThing other){
+			return this.a-other.a;
+		}
+	}
+}

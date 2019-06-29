@@ -1,0 +1,124 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: lamps
+*/
+import java.io.*;
+import java.util.*;
+
+class lamps {
+	
+	public static int[] state, desired; // 2 for neutral, 1 for on, 0 for off
+	public static int c,n;
+	public static ArrayList<String> possible;
+	public static ArrayList<Integer> check;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("lamps.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("lamps.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(f.readLine());
+		c = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(f.readLine());
+		state = new int[n];
+		desired = new int[n];
+		check = new ArrayList<Integer>();
+		Arrays.fill(desired,2);
+		while(st.hasMoreTokens()){
+			int temp = Integer.parseInt(st.nextToken());
+			if(temp != -1){
+				desired[temp-1] = 1;
+				check.add(temp-1);
+			}
+		}
+		st = new StringTokenizer(f.readLine());
+		while(st.hasMoreTokens()){
+			int temp = Integer.parseInt(st.nextToken());
+			if(temp != -1){
+				desired[temp-1] = 0;
+				check.add(temp-1);
+			}
+		}
+		if(c>= 2){
+			c = 4;
+		}
+		possible = new ArrayList<String>();
+		Arrays.fill(state, 1);
+		find(0);
+		if(possible.size()>0){
+			Collections.sort(possible);
+			for(String s: possible){
+				out.println(s);
+			}
+		}
+		else{
+			out.println("IMPOSSIBLE");
+		}
+		out.close();
+	}
+	
+	public static void find(int depth){
+		if(depth == c){
+			for(int i:check){
+				if(!(desired[i] == state[i])){
+					return;
+				}
+			}
+			StringBuilder sb = new StringBuilder();
+			for(int i:state){
+				sb.append(i);
+			}
+			String temp = sb.toString();
+			if(!possible.contains(temp)){
+				possible.add(temp); 
+			}
+			return;
+		}
+		invertAll();
+		find(depth+1);
+		invertAll();
+		invertEvens();
+		find(depth+1);
+		invertEvens();
+		invertOdds();
+		find(depth+1);
+		invertOdds();
+		invertThirds();
+		find(depth+1);
+		invertThirds();
+	}
+	
+	public static void invertAll(){
+		for(int i = 0 ; i< n; i++){
+			change(i);
+		}
+	}
+	
+	public static void invertEvens(){
+		for(int i = 1; i<n; i+=2){
+			change(i);
+		}
+	}
+	
+	public static void invertOdds(){
+		for(int i = 0; i<n; i+=2){
+			change(i);
+		}
+	}
+	
+	public static void invertThirds(){
+		for(int i = 0 ; i<n; i+=3){
+			change(i);
+		}
+	}
+	
+	public static void change(int index){
+		if(state[index] == 1){
+			state[index] = 0;
+		}
+		else{
+			state[index] = 1;
+		}
+	}
+}

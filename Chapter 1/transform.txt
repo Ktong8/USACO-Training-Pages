@@ -1,0 +1,130 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: transform
+*/
+import java.io.*;
+import java.util.*;
+
+class transform {
+	public static int[] rot90(int[] orig, int n){
+		int[] newArray = new int[n*n];
+		for(int i = 0; i<n; i++){//row
+			for(int j = 0; j<n; j++){//column
+				newArray[n*i + j] = orig[n*(n-j-1)+i];
+			}
+		}
+		return newArray;
+	}
+	
+	public static int[] rot180(int[] orig,int n){
+		return rot90(rot90(orig,n),n);
+	}
+	
+	public static int[] rot270(int[] orig,int n){
+		return rot180(rot90(orig,n),n);
+	}
+	
+	public static int[] reflect(int[] orig, int n){
+		int[] newArray = new int[n*n];
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j<n; j++){
+				newArray[n*(i+1)-j-1] = orig[n*i + j];
+			}
+		}
+		return newArray;
+	}
+	
+	public static boolean compare(int[] one, int[] two){
+		for(int i = 0; i<one.length; i++){
+			if(one[i] != two[i]){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("transform.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("transform.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int[] orig = new int[n*n];
+		int[] targ = new int[n*n];
+		for(int i = 0; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			String temp = st.nextToken();
+			for(int j = 0; j<n; j++){
+				if(temp.charAt(j) == '@'){
+					orig[n*i + j] = 1;
+				}
+				else{
+					orig[n*i + j] = 0;
+				}
+			}
+		}
+		
+		for(int i = 0; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			String temp = st.nextToken();
+			for(int j = 0; j<n; j++){
+				if(temp.charAt(j) == '@'){
+					targ[n*i + j] = 1;
+				}
+				else{
+					targ[n*i + j] = 0;
+				}
+			}
+		}
+		boolean check = true;
+		if(compare(rot90(orig,n), targ)){
+			out.println("1");
+			check = false;
+		}
+		else if(compare(rot180(orig,n), targ) && check){
+			out.println("2");
+			check = false;
+		}
+		else if(compare(rot270(orig,n), targ) && check){
+			out.println("3");
+			check = false;
+		}
+		else if(compare(reflect(orig, n), targ) && check){
+			out.println("4");
+			check = false;
+		}
+		else if(compare(orig, targ) && check){
+			out.println("6");
+			check = false;
+		}
+		int[] temp = reflect(orig, n);
+		if(compare(rot90(temp,n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(compare(rot180(temp,n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(compare(rot270(temp,n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(compare(reflect(rot90(orig, n), n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(compare(reflect(rot180(orig, n), n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(compare(reflect(rot270(orig, n), n), targ) && check){
+			out.println("5");
+			check = false;
+		}
+		else if(check){
+			out.println("7");
+		}
+		out.close();
+	}
+}

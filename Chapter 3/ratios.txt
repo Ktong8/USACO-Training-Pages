@@ -1,0 +1,63 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: ratios
+*/
+import java.io.*;
+import java.util.*;
+
+// Cramer's Rule destroys this
+
+class ratios {
+	public static int a,b,c,d,e,f,g,h,i,x,y,z,x1,y1,z1;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("ratios.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("ratios.out")));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		x = Integer.parseInt(st.nextToken());
+		y = Integer.parseInt(st.nextToken());
+		z = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		a = Integer.parseInt(st.nextToken());
+		b = Integer.parseInt(st.nextToken());
+		c = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		d = Integer.parseInt(st.nextToken());
+		e = Integer.parseInt(st.nextToken());
+		f = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		g = Integer.parseInt(st.nextToken());
+		h = Integer.parseInt(st.nextToken());
+		i = Integer.parseInt(st.nextToken());
+		x1 = x*(e*i-h*f)-d*(y*i-h*z)+g*(y*f-e*z);
+		y1 = a*(y*i-h*z)-x*(b*i-h*c)+g*(b*z-c*y);
+		z1 = a*(e*z-f*y)-d*(b*z-c*y)+x*(b*f-e*c);
+		int temp = gcd(Math.max(x1,y1), Math.min(x1,y1));
+		int temp2 = gcd(Math.max(temp, z1), Math.min(temp,z1));
+		x1 /= temp2;
+		y1 /= temp2;
+		z1 /= temp2;
+		if(x1<100 && y1<100 && z1<100 && x1>=0 && y1>=0 && z1>=0){
+			if((x1*a+y1*d+z1*g)%x != 0){
+				temp = x/(x1*a+y1*d+z1*g);
+				x1 *= temp;
+				y1 *= temp;
+				z1 *= temp;
+			}
+			int ret = (x1*a+y1*d+z1*g)/x;
+			out.println(x1 + " " + y1 + " " + z1 + " " + ret);
+		}
+		else{
+			out.println("NONE");
+		}
+		out.close();
+	}
+	
+	public static int gcd(int a, int b){
+		if(b == 0){
+			return a;
+		}
+		return gcd(b, a%b);
+	}
+}

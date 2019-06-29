@@ -1,0 +1,52 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: milk
+*/
+import java.io.*;
+import java.util.*;
+
+class milk {
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("milk.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("milk.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		int goal = Integer.parseInt(st.nextToken());
+		int num = Integer.parseInt(st.nextToken());
+		ArrayList<Farmer> farms = new ArrayList<Farmer>();
+		for(int i = 0; i < num; i++){
+			st = new StringTokenizer(f.readLine());
+			farms.add(new Farmer(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken())));
+		}
+		Collections.sort(farms);
+		int obtained = 0;
+		int cost = 0;
+		while(obtained<goal){
+			if(farms.get(0).amount> goal-obtained){
+				cost += (goal-obtained)*farms.get(0).cost;
+				obtained = goal;
+				farms.remove(0);
+			}
+			else{
+				obtained += farms.get(0).amount;
+				cost += farms.get(0).amount * farms.get(0).cost;
+				farms.remove(0);
+			}
+		}
+		out.println(cost);
+		out.close();
+	}
+	
+	static class Farmer implements Comparable<Farmer>{
+		int cost, amount;
+		
+		Farmer(int cost, int amount){
+			this.cost = cost;
+			this.amount = amount;
+		}
+		
+		public int compareTo(Farmer other){
+			return this.cost-other.cost;
+		}
+	}
+}

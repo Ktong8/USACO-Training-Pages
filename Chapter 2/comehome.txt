@@ -1,0 +1,81 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: comehome
+*/
+import java.io.*;
+import java.util.*;
+
+class comehome {
+	public static int n;
+	public static int[][] distances; //capitals, then lowers, then Z
+	public static boolean[] occupied;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("comehome.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("comehome.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		occupied = new boolean[25];
+		distances = new int[52][52];
+		for(int i = 0 ; i <52; i++){
+			for(int j = 0 ; j<52; j++){
+				if(i!=j){
+					distances[i][j] = 2000000;
+				}
+				else{
+					distances[i][j] = 0;
+				}
+			}
+		}
+		Arrays.fill(occupied, false);
+		for(int i = 0 ; i<n; i++){
+			st = new StringTokenizer(f.readLine());
+			String a = st.nextToken();
+			String b = st.nextToken();
+			int distance = Integer.parseInt(st.nextToken());
+			int start,end;
+			if(a.equals("Z")){
+				start = 51;
+			}
+			else if(a.equals(a.toUpperCase())){
+				start = (int)(a.charAt(0))-65;
+				occupied[start] = true;
+			}
+			else{
+				start = (int)(a.charAt(0))-72;
+			}
+			if(b.equals("Z")){
+				end = 51;
+			}
+			else if(b.equals(b.toUpperCase())){
+				end = (int)(b.charAt(0))-65;
+				occupied[end] = true;
+			}
+			else{
+				end = (int)(b.charAt(0))-72;
+			}
+			distances[start][end] = Math.min(distances[start][end], distance);
+			distances[end][start] = distances[start][end];
+		}
+		for(int k = 0; k<52; k++){
+			for(int i  =0; i<52; i++){
+				for(int j = 0; j<52; j++){
+					distances[i][j] = Math.min(distances[i][j], distances[i][k] + distances[k][j]);
+				}
+			}
+		}
+		int index = 0;
+		int min = 2000000;
+		for(int i = 0 ; i<25; i++){
+			if(occupied[i]){
+				if(distances[i][51]<min){
+					min = distances[i][51];
+					index = i;
+				}
+			}
+		}
+		out.println((char)(index+65) + " " + min);
+		out.close();
+	}
+}

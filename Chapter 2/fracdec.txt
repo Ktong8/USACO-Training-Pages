@@ -1,0 +1,58 @@
+/*
+ID: kevinca3
+LANG: JAVA
+TASK: fracdec
+*/
+import java.io.*;
+import java.util.*;
+
+class fracdec {
+	public static int n,d;
+	public static int[] indices;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader f = new BufferedReader(new FileReader("fracdec.in"));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("fracdec.out")));
+		StringTokenizer st = new StringTokenizer(f.readLine());
+		n = Integer.parseInt(st.nextToken());
+		d = Integer.parseInt(st.nextToken());
+		StringBuilder ret = new StringBuilder(100000);
+		ret.append(n/d);
+		ret.append(".");
+		int residue = n%d;
+		indices = new int[d];
+		int index = 1;
+		if(residue == 0){
+			ret.append("0");
+		}
+		else{
+			indices[residue] = index;
+			index++;
+			n = residue*10;
+			while(residue != 0){
+				residue = n%d;
+				int temp = n/d;
+				n = residue*10;
+				ret.append(temp);
+				if(indices[residue] != 0){
+					int first = ret.indexOf(".") + indices[residue];
+					ret.insert(first,"(");
+					ret.append(")");
+					break;
+				}
+				indices[residue] = index;
+				index++;
+			}
+		}
+		String returnS = ret.toString();
+		index = 0;
+		while(returnS.length()-index > 76){
+			out.println(returnS.substring(index,index+76));
+			index += 76;
+		}
+		if(index-returnS.length() != 0){
+			out.println(returnS.substring(index));
+		}
+		out.close();
+	}
+}
